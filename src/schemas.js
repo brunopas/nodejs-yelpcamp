@@ -5,7 +5,7 @@ const extension = (joi) => ({
     type: "string",
     base: joi.string(),
     messages: {
-        "string.escapeHTML": "{{#label}} não pode incluir elementos HTML!",
+        "string.escapeHTML": "{{#label}} must not include HTML!",
     },
     rules: {
         escapeHTML: {

@@ -33,7 +33,7 @@ module.exports.createCampground = async (req, res, next) => {
 
     await campground.save();
 
-    req.flash("success", "Acampamento cadastrado com sucesso!");
+    req.flash("success", "Successfully created a new campground!");
     res.redirect(`/campgrounds/${campground._id}`);
 };
 
@@ -48,7 +48,7 @@ module.exports.showCampground = async (req, res) => {
         .populate("author");
 
     if (!campground) {
-        req.flash("error", "Não foi possível encontrar este acampamento!");
+        req.flash("error", "Cannot find that campground!");
         return res.redirect("/campgrounds");
     }
 
@@ -60,7 +60,7 @@ module.exports.renderEditForm = async (req, res) => {
     const campground = await Campground.findById(id);
 
     if (!campground) {
-        req.flash("error", "Não foi possível encontrar este acampamento!");
+        req.flash("error", "Cannot find that campground!");
         return res.redirect("/campgrounds");
     }
 
@@ -75,7 +75,7 @@ module.exports.updateCampground = async (req, res) => {
 
     await campground.save();
 
-    req.flash("success", "Acampamento atualizado com sucesso!");
+    req.flash("success", "Successfully updated campground!");
     res.redirect(`/campgrounds/${campground._id}`);
 };
 
@@ -83,6 +83,6 @@ module.exports.deleteCampground = async (req, res) => {
     const { id } = req.params;
     await Campground.findByIdAndDelete(id);
 
-    req.flash("success", "Acampamento excluído com sucesso!");
+    req.flash("success", "Successfully deleted campground!");
     res.redirect("/campgrounds");
 };

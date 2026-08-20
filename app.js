@@ -25,22 +25,15 @@ const campgroundRoutes = require("./src/routes/campgrounds");
 const reviewRoutes = require("./src/routes/reviews");
 const userRoutes = require("./src/routes/users");
 
-const MongoDBStore = require("connect-mongo")(session);
+const MongoStore = require("connect-mongo");
 
-const dbUrl = process.env.DB_URL || "mongodb://localhost:27017/yelpcamp";
+const dbUrl = process.env.DB_URL || "mongodb://localhost:27017/nodejs_yelpcamp";
 
-mongoose.connect(dbUrl, {
-    useNewUrlParser: true,
-    useCreateIndex: true,
-    useUnifiedTopology: true,
-    useFindAndModify: false,
-});
+mongoose.connect(dbUrl);
 
 const db = mongoose.connection;
 db.on("error", console.error.bind(console, "Connection Error:"));
-db.once("open", () => {
-    console.log("Database Connected!");
-});
+db.once("open", () => {});
 
 const app = express();
 
@@ -56,16 +49,21 @@ app.use(
         replaceWith: "_",
     })
 );
-const secret = process.env.SECRET || "thisshouldbeabettersecret!";
+if (!process.env.SECRET) {
+    throw new Error("SECRET environment variable is required");
+}
+const secret = process.env.SECRET;
 
-const store = new MongoDBStore({
-    url: dbUrl,
-    secret,
+const store = MongoStore.create({
+    mongoUrl: dbUrl,
     touchAfter: 24 * 60 * 60,
+    crypto: {
+        secret,
+    },
 });
 
 store.on("error", function (e) {
-    console.log("Session Store Error", e);
+    console.error("Session store error:", e);
 });
 
 const sessionConfig = {
@@ -84,7 +82,6 @@ const sessionConfig = {
 
 app.use(session(sessionConfig));
 app.use(flash());
-app.use(helmet());
 
 const scriptSrcUrls = [
     "https://stackpath.bootstrapcdn.com/",
@@ -111,22 +108,26 @@ const connectSrcUrls = [
 const fontSrcUrls = [];
 
 app.use(
-    helmet.contentSecurityPolicy({
-        directives: {
-            defaultSrc: [],
-            connectSrc: ["'self'", ...connectSrcUrls],
-            scriptSrc: ["'unsafe-inline'", "'self'", ...scriptSrcUrls],
-            styleSrc: ["'self'", "'unsafe-inline'", ...styleSrcUrls],
-            workerSrc: ["'self'", "blob:"],
-            objectSrc: [],
-            imgSrc: [
-                "'self'",
-                "blob:",
-                "data:",
-                "https://images.unsplash.com/",
-            ],
-            fontSrc: ["'self'", ...fontSrcUrls],
+    helmet({
+        contentSecurityPolicy: {
+            directives: {
+                defaultSrc: [],
+                connectSrc: ["'self'", ...connectSrcUrls],
+                scriptSrc: ["'unsafe-inline'", "'self'", ...scriptSrcUrls],
+                styleSrc: ["'self'", "'unsafe-inline'", ...styleSrcUrls],
+                workerSrc: ["'self'", "blob:"],
+                objectSrc: [],
+                imgSrc: [
+                    "'self'",
+                    "blob:",
+                    "data:",
+                    "https://images.unsplash.com/",
+                ],
+                fontSrc: ["'self'", ...fontSrcUrls],
+            },
         },
+        crossOriginEmbedderPolicy: false,
+        crossOriginResourcePolicy: { policy: "cross-origin" },
     })
 );
 
@@ -153,16 +154,14 @@ app.get("/", (req, res) => {
 });
 
 app.all("*", (req, res, next) => {
-    next(new ExpressError("Página Não Encontrada", 404));
+    next(new ExpressError("Page Not Found", 404));
 });
 
 app.use((err, req, res, next) => {
     const { statusCode = 500 } = err;
-    if (!err.message) err.message = "Desculpe, algo deu errado!";
+    if (!err.message) err.message = "Something went wrong!";
     res.status(statusCode).render("error", { err });
 });
 
 const port = process.env.PORT || 3000;
-app.listen(port, () => {
-    console.log(`Serving on port ${port}`);
-});
+app.listen(port);

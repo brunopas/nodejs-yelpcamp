@@ -1,132 +1,100 @@
-<h1 align="center">
-    <img alt="YelpCamp" title="#YelpCamp" src="./docs/screenshots/campground.home.png" />
-</h1>
+# YelpCamp
 
-<h4 align="center"> 
-	🚧  YelpCamp 🚀 Concluído 🚧
-</h4>
+Yelp-style web app for discovering, creating, and reviewing campgrounds. Built with Express, MongoDB, and Mapbox as a study project from [The Web Developer Bootcamp](https://www.udemy.com/course/the-web-developer-bootcamp/) by Colt Steele.
 
-<p align="center">
- <a href="#-sobre">Sobre</a> •
- <a href="#-funcionalidades">Funcionalidades</a> •
- <a href="#-layout">Layout</a> • 
- <a href="#-como-executar">Como Executar</a> • 
- <a href="#-tecnologias">Tecnologias</a> • 
- <a href="#-autor">Autor</a> • 
- <a href="#user-content--licença">Licença</a>
-</p>
+## Features
 
+- Browse campgrounds on a cluster map and in a card grid
+- Create, update, and delete your own listings (with image upload)
+- View a campground on a Mapbox map, with location and price
+- Leave star ratings and text reviews on other people's campgrounds
+- Register, log in, and log out with Passport local authentication
+- Flash messages, Joi validation, and HTML sanitization on user input
 
-## 💻 Sobre
-O YelpCamp é uma aplicação similar ao famoso Yelp, mas com foco exclusivo em acampamentos (campgrounds). É possível explorar os acampamentos, cadastrar novos acampamentos, adicionar e excluir avaliações, sendo que a maioria das funções necessitam de um cadastro / login.
+Most write actions require an account. Only the author of a campground or review can edit or delete it.
 
-Projeto desenvolvido durante o **The Web Developer Bootcamp 2021** oferecido pelo [Colt Steele By Udemy](https://www.udemy.com/course/the-web-developer-bootcamp/).
+## Tech stack
 
----
+- **Runtime:** Node.js, Express
+- **Views:** EJS with ejs-mate layouts
+- **Database:** MongoDB via Mongoose
+- **Auth:** Passport, passport-local, passport-local-mongoose
+- **Sessions:** express-session stored in MongoDB (`connect-mongo`)
+- **Maps:** Mapbox GL JS and Mapbox Geocoding
+- **Uploads:** Multer (files land in `public/uploads`)
+- **Security:** Helmet, express-mongo-sanitize, sanitize-html
 
-## ⚙️ Funcionalidades
+See [package.json](./package.json) for the full dependency list.
 
-- Mapas dos Acampamentos (Localização)
-- Login e Cadastro
-- Cadastrar / Atualizar Acampamentos
-- Visualizar Acampamentos
-- Excluir Acampamentos
-- Avaliar Acampamentos / Excluir Avaliações
+## Requirements
 
----
+- [Node.js](https://nodejs.org/) 18 or later
+- [Git](https://git-scm.com/)
+- [MongoDB](https://www.mongodb.com/) running locally, or a remote connection string
+- A [Mapbox](https://www.mapbox.com/) access token
 
-## 🎨 Layout
+## Environment variables
 
-<p align="center"><b>Home</b></>
-<img alt="YelpCamp" title="#YelpCamp" src="./docs/screenshots/campground.home.png" />
-<p align="center"><b>Cadastro</b></>
-<img alt="YelpCamp" title="#YelpCamp" src="./docs/screenshots/user.register.png" />
-<p align="center"><b>Login</b></>
-<img alt="YelpCamp" title="#YelpCamp" src="./docs/screenshots/user.login.png" />
-<p align="center"><b>Acampamentos</b></>
-<img alt="YelpCamp" title="#YelpCamp" src="./docs/screenshots/campground.index.png" />
-<p align="center"><b>Novo Acampamento</b></>
-<img alt="YelpCamp" title="#YelpCamp" src="./docs/screenshots/campground.new.png" />
-<p align="center"><b>Visualizar Acampamento (cadastrado por mim)</b></>
-<img alt="YelpCamp" title="#YelpCamp" src="./docs/screenshots/campground.show-1.png" />
-<p align="center"><b>Visualizar Acampamento (cadastrado por outra pessoa)</b></>
-<img alt="YelpCamp" title="#YelpCamp" src="./docs/screenshots/campground.show-2.png" />
-<p align="center"><b>Editar Acampamento</b></>
-<img alt="YelpCamp" title="#YelpCamp" src="./docs/screenshots/campground.edit.png" />
+Create a `.env` file in the project root:
 
----
-
-## 🚀 Como Executar
-
-Antes de começar, você vai precisar ter instalado em sua máquina as seguintes ferramentas:
-[Git](https://git-scm.com), [Node.js](https://nodejs.org/en/). 
-Além disto é bom ter um editor para trabalhar com o código como [VSCode](https://code.visualstudio.com/)
-
-```bash
-
-# Clone este repositório
-$ git clone https://github.com/brunopas/yelpcamp.git
-
-# Acesse a pasta do projeto pelo terminal
-$ cd yelpcamp
-
-# Vá para a pasta "src"
-$ cd src
-
-# Instale as dependências
-$ npm install
-
-# Execute o script do banco de dados
-$ npm run seeds
-
-# Execute a aplicação em modo de desenvolvimento
-$ npm run dev
-
-# O servidor inciará na porta:3000 (http://localhost:3333)
-
+```env
+MAPBOX_TOKEN=your_mapbox_token
+DB_URL=mongodb://localhost:27017/nodejs_yelpcamp
+SECRET=a_long_random_session_secret
+PORT=3000
 ```
 
----
+| Variable | Required | Default |
+| --- | --- | --- |
+| `MAPBOX_TOKEN` | Yes (maps and geocoding) | — |
+| `DB_URL` | No | `mongodb://localhost:27017/nodejs_yelpcamp` |
+| `SECRET` | No | a development fallback (change this) |
+| `PORT` | No | `3000` |
 
-## 🛠 Tecnologias
+`dotenv` is loaded only when `NODE_ENV` is not `production`.
 
-As seguintes tecnologias e ferramentas foram usadas na construção do projeto:
+## Getting started
 
-- HTML
-- CSS
-- Javascript
-- **[NodeJS](https://nodejs.org/en/)**
-- **[Express](https://expressjs.com/)**
-- **[EJS](https://ejs.co/)**
-- **[MongoDB](https://www.mongodb.com/)**
-- **[Mongoose](https://mongoosejs.com/)**
+```bash
+git clone https://github.com/brunopas/nodejs-yelpcamp.git
+cd nodejs-yelpcamp
+npm install
+```
 
-> Veja o arquivo [package.json](https://github.com/brunopas/jobscalc/blob/main/package.json)
+Add the `.env` file above, then seed sample campgrounds and start the app:
 
----
+```bash
+npm run seed
+npm run dev
+```
 
-## 💪 Como contribuir para o projeto
+Open [http://localhost:3000](http://localhost:3000).
 
-1. Faça um **fork** do projeto.
-2. Crie uma nova branch com as suas alterações: `git checkout -b my-feature`
-3. Salve as alterações e crie uma mensagem de commit contando o que você fez: `git commit -m "feature: My new feature"`
-4. Envie as suas alterações: `git push origin my-feature`
-> Caso tenha alguma dúvida confira este [guia de como contribuir no GitHub](./CONTRIBUTING.md)
+`npm run seed` wipes existing campgrounds and inserts 25 generated listings. The seed script currently connects to local MongoDB (`mongodb://localhost:27017/nodejs_yelpcamp`) and uses a hardcoded author id, so register a user in the app (or update that id in `seeds/index.js`) if you want seeded listings to belong to you.
 
----
+## Scripts
 
-## 🦸 Autor
+| Script | Command | What it does |
+| --- | --- | --- |
+| `npm run dev` | `nodemon app.js` | Start the server with auto-reload |
+| `npm run seed` | `node seeds/index.js` | Reset and populate campgrounds |
 
-<a href="https://www.linkedin.com/in/brunopasmacedo/"><img style="border-radius: 50%;" src="https://avatars.githubusercontent.com/u/82418515?v=4" width="100px;" alt="Bruno Pasquarelli Macedo"/></a>
-<br />
-<a href="https://www.linkedin.com/in/brunopasmacedo/" title="Bruno Pasquarelli Macedo"><b>Bruno Pasquarelli Macedo</b></a> 🚀<br />
-[![Linkedin Badge](https://img.shields.io/badge/-LinkedIn-blue?style=flat-square&logo=Linkedin&logoColor=white&link=https://www.linkedin.com/in/tgmarinho/)](https://www.linkedin.com/in/brunopasmacedo/) 
-[![GitHub Badge](https://img.shields.io/badge/-GitHub-black?style=flat-square&logo=GitHub&logoColor=white&link=https://github.com/brunopas)](https://github.com/brunopas)
+## Project structure
 
----
+```text
+nodejs-yelpcamp/
+├── app.js                 # Express app, session, Passport, error handlers
+├── seeds/                 # Sample cities, helpers, and seed runner
+├── public/                # Static CSS, JS, and uploaded images
+└── src/
+    ├── controllers/       # Campground, review, and user actions
+    ├── models/            # Mongoose schemas
+    ├── routes/            # Express routers
+    ├── views/             # EJS templates
+    ├── middleware.js
+    └── schemas.js         # Joi validation
+```
 
-## 📝 Licença
+## License
 
-Este projeto está sob a licença [MIT](./LICENSE).
-
-Feito com ❤️ por Bruno Macedo 👋🏽 [Entre em contato!](https://www.linkedin.com/in/brunopasmacedo/)
+MIT. See [LICENSE](./LICENSE).

@@ -8,9 +8,16 @@ module.exports.isLoggedIn = (req, res, next) => {
         req.session.returnTo = req.originalUrl;
         req.flash(
             "error",
-            "Para realizar esta operação você deve fazer login primeiro!"
+            "You must be signed in first!"
         );
         return res.redirect("/login");
+    }
+    next();
+};
+
+module.exports.storeReturnTo = (req, res, next) => {
+    if (req.session.returnTo) {
+        res.locals.returnTo = req.session.returnTo;
     }
     next();
 };
@@ -32,7 +39,7 @@ module.exports.isAuthor = async (req, res, next) => {
     if (!campground.author.equals(req.user._id)) {
         req.flash(
             "error",
-            "Desculpe, você não possui permissão para fazer isso!"
+            "You do not have permission to do that!"
         );
         return res.redirect(`/campgrounds/${id}`);
     }
@@ -45,7 +52,7 @@ module.exports.isReviewAuthor = async (req, res, next) => {
     if (!review.author.equals(req.user._id)) {
         req.flash(
             "error",
-            "Desculpe, você não possui permissão para fazer isso!"
+            "You do not have permission to do that!"
         );
         return res.redirect(`/campgrounds/${id}`);
     }

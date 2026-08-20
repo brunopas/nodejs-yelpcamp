@@ -6,6 +6,7 @@ const catchAsync = require("../utils/catchAsync");
 
 const User = require("../models/user");
 const UserController = require("../controllers/UserController");
+const { storeReturnTo } = require("../middleware");
 
 router
     .route("/register")
@@ -16,6 +17,7 @@ router
     .route("/login")
     .get(UserController.renderLogin)
     .post(
+        storeReturnTo,
         passport.authenticate("local", {
             failureFlash: true,
             failureRedirect: "/login",
