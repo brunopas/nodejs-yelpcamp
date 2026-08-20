@@ -35,20 +35,17 @@ See [package.json](./package.json) for the full dependency list.
 
 ## Environment variables
 
-Create a `.env` file in the project root:
+Copy `.env.example` to `.env` and fill in the values:
 
-```env
-MAPBOX_TOKEN=your_mapbox_token
-DB_URL=mongodb://localhost:27017/nodejs_yelpcamp
-SECRET=a_long_random_session_secret
-PORT=3000
+```bash
+cp .env.example .env
 ```
 
 | Variable | Required | Default |
 | --- | --- | --- |
 | `MAPBOX_TOKEN` | Yes (maps and geocoding) | — |
+| `SECRET` | Yes (session signing) | — |
 | `DB_URL` | No | `mongodb://localhost:27017/nodejs_yelpcamp` |
-| `SECRET` | No | a development fallback (change this) |
 | `PORT` | No | `3000` |
 
 `dotenv` is loaded only when `NODE_ENV` is not `production`.
@@ -59,9 +56,11 @@ PORT=3000
 git clone https://github.com/brunopas/nodejs-yelpcamp.git
 cd nodejs-yelpcamp
 npm install
+cp .env.example .env
+# Fill in MAPBOX_TOKEN and SECRET in .env
 ```
 
-Add the `.env` file above, then seed sample campgrounds and start the app:
+Then seed sample campgrounds and start the app:
 
 ```bash
 npm run seed
